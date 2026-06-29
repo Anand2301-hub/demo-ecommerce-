@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ShopNest – Premium Products</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{
+      --bg:#0a0a0f;--surface:#13131a;--surface2:#1c1c26;
+      --accent:#6c47ff;--accent2:#a78bfa;--accent3:#38bdf8;
+      --text:#f1f1f5;--muted:#6b6b80;--border:#22222e;
+      --card:#111118;--green:#22c55e;--red:#f87171;
+    }
+    html{scroll-behavior:smooth}
+    body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;overflow-x:hidden}
+
+    /* SCROLLBAR */
+    ::-webkit-scrollbar{width:6px}
+    ::-webkit-scrollbar-track{background:var(--bg)}
+    ::-webkit-scrollbar-thumb{background:var(--accent);border-radius:3px}
+
+    /* NAV */
+    nav{
+      position:sticky;top:0;z-index:200;
+      background:rgba(10,10,15,0.92);backdrop-filter:blur(16px);
+      border-bottom:1px solid var(--border);
+      padding:0 32px;height:68px;
+      display:flex;align-items:center;justify-content:space-between;
+    }
+    .nav-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.5rem;letter-spacing:-0.5px}
+    .nav-logo span{color:var(--accent2)}
+    .nav-logo em{color:var(--accent3);font-style:normal}
+    .nav-center{display:flex;gap:28px}
+    .nav-center a{color:var(--muted);text-decoration:none;font-size:0.88rem;font-weight:500;transition:color .2s}
+    .nav-center a:hover{color:var(--text)}
+    .nav-right{display:flex;align-items:center;gap:14px}
+    .cart-pill{
+      background:var(--accent);color:#fff;border:none;cursor:pointer;
+      padding:9px 20px;border-radius:100px;font-size:0.85rem;font-weight:600;
+      font-family:'Inter',sans-serif;display:flex;align-items:center;gap:8px;
+      transition:all .2s;
+    }
+    .cart-pill:hover{background:#5535e0;transform:scale(1.03)}
+    #cart-count{
+      background:rgba(255,255,255,0.25);border-radius:100px;
+      padding:1px 8px;font-size:0.78rem;font-weight:700;
+    }
+
+    /* HERO */
+    .hero{
+      max-width:1280px;margin:0 auto;padding:70px 32px 50px;
+      display:grid;grid-template-columns:1.1fr 0.9fr;gap:60px;align-items:center;
+    }
+    .hero-tag{
+      display:inline-flex;align-items:center;gap:8px;
+      background:rgba(108,71,255,0.12);border:1px solid rgba(108,71,255,0.3);
+      color:var(--accent2);padding:6px 16px;border-radius:100px;
+      font-size:0.75rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;
+      margin-bottom:22px;
+    }
+    .hero-tag::before{content:'●';color:var(--green);font-size:0.6rem}
+    .hero h1{
+      font-family:'Syne',sans-serif;font-size:clamp(2.6rem,5vw,4.2rem);
+      font-weight:800;line-height:1.04;letter-spacing:-1.5px;margin-bottom:20px;
+    }
+    .hero h1 .hl{
+      background:linear-gradient(135deg,var(--accent2),var(--accent3));
+      -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+    }
+    .hero-sub{color:var(--muted);font-size:1.05rem;line-height:1.7;max-width:480px;margin-bottom:36px}
+    .hero-btns{display:flex;gap:12px;flex-wrap:wrap}
+    .btn-glow{
+      background:var(--accent);color:#fff;border:none;cursor:pointer;
+      padding:13px 32px;border-radius:12px;font-size:0.95rem;font-weight:600;
+      font-family:'Inter',sans-serif;box-shadow:0 0 24px rgba(108,71,255,0.35);
+      transition:all .25s;
+    }
+    .btn-glow:hover{background:#5535e0;transform:translateY(-2px);box-shadow:0 0 36px rgba(108,71,255,0.5)}
+    .btn-outline{
+      background:transparent;color:var(--text);cursor:pointer;
+      border:1px solid var(--border);padding:13px 32px;border-radius:12px;
+      font-size:0.95rem;font-weight:500;font-family:'Inter',sans-serif;transition:all .25s;
+    }
+    .btn-outline:hover{border-color:var(--accent2);color:var(--accent2)}
+
+    /* TRUST BADGES */
+    .trust-row{display:flex;gap:8px;margin-top:32px;flex-wrap:wrap}
+    .trust-badge{
+      background:var(--surface);border:1px solid var(--border);
+      border-radius:10px;padding:10px 16px;
+      display:flex;align-items:center;gap:8px;font-size:0.8rem;color:var(--muted);
+    }
+    .trust-badge strong{color:var(--text);font-weight:600}
+
+    /* HERO STATS CARD */
+    .hero-card{
+      background:var(--surface);border:1px solid var(--border);
+      border-radius:20px;padding:28px;display:flex;flex-direction:column;gap:14px;
+      position:relative;overflow:hidden;
+    }
+    .hero-card::before{
+      content:'';position:absolute;top:-60px;right:-60px;
+      width:200px;height:200px;background:radial-gradient(circle,rgba(108,71,255,0.15),transparent 70%);
+      border-radius:50%;
+    }
+    .stat-card{
+      background:var(--surface2);border-radius:12px;padding:16px 20px;
+      display:flex;align-items:center;gap:16px;
+    }
+    .stat-icon{font-size:1.8rem}
+    .stat-val{font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:800;color:var(--accent2)}
+    .stat-lbl{color:var(--muted);font-size:0.78rem;margin-top:2px}
+
+    /* AI BADGE */
+    .ai-badge{
+      margin-top:4px;
+      background:linear-gradient(135deg,rgba(108,71,255,0.2),rgba(56,189,248,0.15));
+      border:1px solid rgba(108,71,255,0.3);border-radius:12px;padding:14px 18px;
+      display:flex;align-items:center;gap:12px;font-size:0.82rem;color:var(--muted);
+    }
+    .ai-badge strong{color:var(--accent2)}
+
+    /* ABOUT STRIP */
+    .about-strip{
+      background:linear-gradient(135deg,rgba(108,71,255,0.08),rgba(56,189,248,0.05));
+      border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+      padding:48px 32px;
+    }
+    .about-inner{max-width:1280px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+    .about-text h2{font-family:'Syne',sans-serif;font-size:1.8rem;font-weight:800;margin-bottom:14px}
+    .about-text p{color:var(--muted);line-height:1.7;font-size:0.95rem;margin-bottom:14px}
+    .about-stats{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .astat{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:20px;text-align:center}
+    .astat-num{font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;color:var(--accent2)}
+    .astat-lbl{color:var(--muted);font-size:0.78rem;margin-top:4px}
+
+    /* CATEGORY BAR */
+    .cat-bar{max-width:1280px;margin:0 auto;padding:40px 32px 0}
+    .cat-bar-title{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:700;margin-bottom:20px}
+    .cat-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+    .cat-tab{
+      padding:8px 20px;border-radius:100px;border:1px solid var(--border);
+      background:transparent;color:var(--muted);font-size:0.85rem;font-weight:500;
+      cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s;
+    }
+    .cat-tab:hover,.cat-tab.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+    /* SEARCH */
+    .search-wrap{max-width:1280px;margin:0 auto;padding:0 32px 28px}
+    .search-input{
+      width:100%;padding:13px 22px;background:var(--surface);border:1px solid var(--border);
+      border-radius:14px;color:var(--text);font-size:0.95rem;font-family:'Inter',sans-serif;
+      outline:none;transition:border-color .2s;
+    }
+    .search-input::placeholder{color:var(--muted)}
+    .search-input:focus{border-color:var(--accent)}
+
+    /* GRID */
+    .grid-wrap{max-width:1280px;margin:0 auto;padding:0 32px 80px}
+    .products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:20px}
+
+    /* CARD */
+    .pcard{
+      background:var(--card);border:1px solid var(--border);
+      border-radius:18px;overflow:hidden;
+      transition:transform .22s,border-color .22s,box-shadow .22s;
+      position:relative;
+    }
+    .pcard:hover{
+      transform:translateY(-5px);border-color:var(--accent);
+      box-shadow:0 12px 40px rgba(108,71,255,0.18);
+    }
+    .card-img-wrap{
+      width:100%;aspect-ratio:1;overflow:hidden;
+      background:#0d0d14;display:flex;align-items:center;justify-content:center;
+      position:relative;
+    }
+    .card-img-wrap img{
+      width:100%;height:100%;object-fit:cover;
+      transition:transform .4s;
+    }
+    .pcard:hover .card-img-wrap img{transform:scale(1.06)}
+    .card-badge{
+      position:absolute;top:12px;left:12px;z-index:2;
+      background:var(--accent);color:#fff;
+      font-size:0.68rem;font-weight:700;padding:4px 11px;
+      border-radius:100px;letter-spacing:.5px;text-transform:uppercase;
+    }
+    .card-badge.sale{background:#f59e0b}
+    .card-badge.new{background:var(--accent3);color:#0a0a0f}
+    .card-body{padding:16px}
+    .card-cat{font-size:0.68rem;color:var(--accent2);font-weight:600;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:5px}
+    .card-name{font-family:'Syne',sans-serif;font-weight:700;font-size:1rem;margin-bottom:5px;line-height:1.3}
+    .card-desc{font-size:0.8rem;color:var(--muted);line-height:1.5;margin-bottom:10px}
+    .card-rating{font-size:0.76rem;color:#fbbf24;margin-bottom:12px}
+    .card-rating span{color:var(--muted);margin-left:4px}
+    .card-foot{display:flex;align-items:center;justify-content:space-between}
+    .price-group{}
+    .price-now{font-family:'Syne',sans-serif;font-size:1.15rem;font-weight:800}
+    .price-old{font-size:0.78rem;color:var(--muted);text-decoration:line-through;margin-left:6px}
+    .price-save{
+      font-size:0.7rem;color:var(--green);font-weight:600;
+      background:rgba(34,197,94,0.1);padding:2px 7px;border-radius:100px;margin-left:6px;
+    }
+    .add-cart-btn{
+      background:var(--accent);color:#fff;border:none;cursor:pointer;
+      width:38px;height:38px;border-radius:10px;font-size:1.3rem;
+      display:flex;align-items:center;justify-content:center;
+      transition:all .2s;font-weight:700;
+    }
+    .add-cart-btn:hover{background:#5535e0;transform:scale(1.1)}
+
+    /* TOAST */
+    .toast{
+      position:fixed;bottom:28px;right:28px;z-index:999;
+      background:var(--surface2);border:1px solid var(--accent);color:var(--text);
+      padding:13px 22px;border-radius:14px;font-size:0.88rem;font-weight:500;
+      transform:translateY(80px);opacity:0;transition:all .3s;
+      box-shadow:0 8px 32px rgba(108,71,255,0.25);
+    }
+    .toast.show{transform:translateY(0);opacity:1}
+
+    /* CART DRAWER */
+    .drawer-overlay{
+      position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:300;
+      display:none;align-items:flex-start;justify-content:flex-end;
+    }
+    .drawer-overlay.open{display:flex}
+    .cart-drawer{
+      background:var(--surface);border-left:1px solid var(--border);
+      width:420px;max-width:95vw;height:100vh;overflow-y:auto;
+      padding:28px;display:flex;flex-direction:column;gap:0;
+      animation:slideIn .25s ease;
+    }
+    @keyframes slideIn{from{transform:translateX(100%)}to{transform:translateX(0)}}
+    .drawer-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px}
+    .drawer-head h2{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:700}
+    .close-drawer{background:none;border:none;color:var(--muted);cursor:pointer;font-size:1.4rem;padding:4px}
+    .close-drawer:hover{color:var(--text)}
+    .cart-item{display:flex;gap:14px;padding:14px 0;border-bottom:1px solid var(--border)}
+    .ci-img{width:64px;height:64px;border-radius:10px;object-fit:cover;background:var(--surface2)}
+    .ci-info{flex:1}
+    .ci-name{font-weight:600;font-size:0.9rem;margin-bottom:4px}
+    .ci-price{color:var(--accent2);font-size:0.85rem}
+    .ci-qty{display:flex;align-items:center;gap:8px;margin-top:8px}
+    .qty-btn{
+      background:var(--surface2);border:1px solid var(--border);color:var(--text);
+      width:26px;height:26px;border-radius:6px;cursor:pointer;font-size:0.9rem;
+      display:flex;align-items:center;justify-content:center;
+    }
+    .qty-val{font-size:0.88rem;min-width:20px;text-align:center}
+    .ci-remove{background:none;border:none;color:var(--muted);cursor:pointer;font-size:1rem;padding:4px;align-self:flex-start}
+    .ci-remove:hover{color:var(--red)}
+    .cart-empty{text-align:center;color:var(--muted);padding:60px 0;font-size:0.9rem}
+    .cart-total-row{margin-top:20px;padding-top:20px;border-top:1px solid var(--border)}
+    .cart-total-num{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;text-align:right}
+    .checkout-btn{
+      width:100%;margin-top:14px;background:var(--accent);color:#fff;border:none;
+      cursor:pointer;padding:14px;border-radius:12px;font-size:0.95rem;
+      font-weight:700;font-family:'Inter',sans-serif;transition:background .2s;
+      box-shadow:0 4px 20px rgba(108,71,255,0.3);
+    }
+    .checkout-btn:hover{background:#5535e0}
+
+    /* FOOTER */
+    footer{
+      border-top:1px solid var(--border);padding:36px 32px;
+      display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;
+    }
+    .footer-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem}
+    .footer-logo span{color:var(--accent2)}
+    footer p{color:var(--muted);font-size:0.82rem}
+    .footer-links{display:flex;gap:20px}
+    .footer-links a{color:var(--muted);text-decoration:none;font-size:0.82rem;transition:color .2s}
+    .footer-links a:hover{color:var(--accent2)}
+
+    /* RESPONSIVE */
+    @media(max-width:900px){
+      .hero{grid-template-columns:1fr;padding:40px 20px 32px}
+      .hero-card{display:none}
+      .about-inner{grid-template-columns:1fr;gap:32px;padding:32px 20px}
+      .nav-center{display:none}
+      .cat-bar,.search-wrap,.grid-wrap{padding-left:16px;padding-right:16px}
+      footer{flex-direction:column;text-align:center}
+      .footer-links{justify-content:center}
+    }
+    @media(max-width:500px){
+      .hero h1{font-size:2.1rem}
+      .about-stats{grid-template-columns:1fr 1fr}
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Shop<span>Nest</span><em>™</em></div>
+  <div class="nav-center">
+    <a href="#catalog">Catalog</a>
+    <a href="#about">About Us</a>
+    <a href="#catalog">Electronics</a>
+    <a href="#catalog">Fashion</a>
+  </div>
+  <div class="nav-right">
+    <button class="cart-pill" onclick="openCart()">
+      🛒 Cart <span id="cart-count">0</span>
+    </button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div>
+    <div class="hero-tag">✦ Trusted by 12,400+ Customers</div>
+    <h1>Your <span class="hl">Premium</span><br>Store for<br>Everything</h1>
+    <p class="hero-sub">Electronics, fashion, home & fitness — all curated with care. Fast delivery, genuine products, zero compromise.</p>
+    <div class="hero-btns">
+      <button class="btn-glow" onclick="document.getElementById('catalog').scrollIntoView({behavior:'smooth'})">Shop Now →</button>
+      <button class="btn-outline" onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})">Our Story</button>
+    </div>
+    <div class="trust-row">
+      <div class="trust-badge">🚚 <strong>Free Shipping</strong> above ₹999</div>
+      <div class="trust-badge">↩️ <strong>7-Day</strong> Returns</div>
+      <div class="trust-badge">🔒 <strong>Secure</strong> Payments</div>
+    </div>
+  </div>
+  <div class="hero-card">
+    <div class="stat-card">
+      <div class="stat-icon">🛒</div>
+      <div><div class="stat-val">12,400+</div><div class="stat-lbl">Happy Customers</div></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">⭐</div>
+      <div><div class="stat-val">4.8 / 5</div><div class="stat-lbl">Average Rating</div></div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon">📦</div>
+      <div><div class="stat-val">500+</div><div class="stat-lbl">Products in Store</div></div>
+    </div>
+    <div class="ai-badge">
+      🤖 <div><strong>AI-Powered Store</strong> — Smart recommendations, real-time search & instant cart updates built with modern tech.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about-strip" id="about">
+  <div class="about-inner">
+    <div class="about-text">
+      <h2>Why ShopNest?</h2>
+      <p>Started in 2022, ShopNest was built with one mission — bring premium products to every Indian household without the premium price tag. We work directly with manufacturers and trusted brands to cut out the middleman.</p>
+      <p>Every product is quality-checked, every order is tracked, and every customer is treated like family. From gadgets to fitness gear — we've got you covered.</p>
+      <p style="color:var(--accent2);font-weight:600">🏆 Winner — Best D2C Store 2025 · South India Tech Summit</p>
+    </div>
+    <div class="about-stats">
+      <div class="astat"><div class="astat-num">12.4K+</div><div class="astat-lbl">Customers Served</div></div>
+      <div class="astat"><div class="astat-num">₹2.1Cr+</div><div class="astat-lbl">Products Sold</div></div>
+      <div class="astat"><div class="astat-num">500+</div><div class="astat-lbl">Products Listed</div></div>
+      <div class="astat"><div class="astat-num">4.8★</div><div class="astat-lbl">Customer Rating</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CATALOG -->
+<div id="catalog">
+  <div class="cat-bar">
+    <div class="cat-bar-title">All Products</div>
+    <div class="cat-tabs">
+      <button class="cat-tab active" onclick="filterCat('all',this)">All</button>
+      <button class="cat-tab" onclick="filterCat('electronics',this)">⚡ Electronics</button>
+      <button class="cat-tab" onclick="filterCat('fashion',this)">👗 Fashion</button>
+      <button class="cat-tab" onclick="filterCat('home',this)">🏠 Home</button>
+      <button class="cat-tab" onclick="filterCat('sports',this)">🏋️ Sports</button>
+    </div>
+  </div>
+  <div class="search-wrap">
+    <input class="search-input" id="searchInput" type="text" placeholder="🔍  Search products by name or category..." oninput="doSearch()"/>
+  </div>
+  <div class="grid-wrap">
+    <div class="products-grid" id="productsGrid"></div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Shop<span>Nest</span>™</div>
+  <p>© 2026 ShopNest · Built with ❤️ · Capstone Project</p>
+  <div class="footer-links">
+    <a href="#">Privacy</a>
+    <a href="#">Returns</a>
+    <a href="#">Contact</a>
+    <a href="#">About</a>
+  </div>
+</footer>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- CART DRAWER -->
+<div class="drawer-overlay" id="drawerOverlay" onclick="handleOverlayClick(event)">
+  <div class="cart-drawer">
+    <div class="drawer-head">
+      <h2>🛒 Your Cart</h2>
+      <button class="close-drawer" onclick="closeCart()">✕</button>
+    </div>
+    <div id="cartBody"></div>
+  </div>
+</div>
+
+<script>
+const PRODUCTS = [
+  {id:1,name:"Wireless Earbuds Pro",cat:"electronics",img:"earbuds.png",price:1999,old:2999,desc:"Active noise cancellation, 30hr battery life, IPX5 waterproof.",rating:"★★★★★",reviews:248,badge:"Best Seller"},
+  {id:2,name:"Smart Watch Series X",cat:"electronics",img:"watch.png",price:4499,old:5999,desc:"Health monitoring, GPS tracking, AMOLED display.",rating:"★★★★☆",reviews:182,badge:"New"},
+  {id:3,name:"Zebronics Mechanical Keyboard",cat:"electronics",img:"keyboard.webp",price:2799,old:3499,desc:"RGB backlit, blue switches, full size layout.",rating:"★★★★★",reviews:96,badge:null},
+  {id:4,name:"Logitech HD Webcam",cat:"electronics",img:"webcam.avif",price:3299,old:null,desc:"1080p 60fps, auto-focus, built-in noise cancelling mic.",rating:"★★★★☆",reviews:74,badge:"Sale"},
+  {id:5,name:"AIR Running Shoes",cat:"sports",img:"shoes.jpg",price:2499,old:3299,desc:"Lightweight mesh upper, responsive cushioned sole.",rating:"★★★★★",reviews:310,badge:"Best Seller"},
+  {id:6,name:"Premium Yoga Mat",cat:"sports",img:"yogamat.jpg",price:899,old:1299,desc:"6mm thick, dual-layer non-slip surface, includes carry strap.",rating:"★★★★☆",reviews:155,badge:null},
+  {id:7,name:"Cotton Oversized Tee",cat:"fashion",img:"tshirt.jpg",price:599,old:899,desc:"100% organic cotton, relaxed boxy fit, unisex.",rating:"★★★★☆",reviews:423,badge:"Popular"},
+  {id:8,name:"Elephant Crossbody Bag",cat:"fashion",img:"bag.png",price:1899,old:2499,desc:"Vegan leather, brass elephant charm, multiple pockets.",rating:"★★★★★",reviews:89,badge:null},
+  {id:9,name:"Artisan Coffee Mug",cat:"home",img:"mug.png",price:799,old:null,desc:"Handcrafted ceramic, 350ml, microwave & dishwasher safe.",rating:"★★★★☆",reviews:201,badge:null},
+  {id:10,name:"Flexible LED Desk Lamp",cat:"home",img:"lamp.png",price:1299,old:1799,desc:"3 brightness modes, USB charging port, flexible gooseneck.",rating:"★★★★★",reviews:137,badge:"New"},
+  {id:11,name:"Portronics Bluetooth Speaker",cat:"electronics",img:"speaker.png",price:1599,old:2199,desc:"Waterproof IPX7, RGB glow ring, 12hr playtime.",rating:"★★★★☆",reviews:265,badge:"Sale"},
+  {id:12,name:"Indoor Plant Pot Set",cat:"home",img:"plant.png",price:699,old:null,desc:"Set of 2 ceramic pots, modern minimal black design.",rating:"★★★★☆",reviews:78,badge:null},
+  {id:13,name:"Rubber Dumbbell 10kg",cat:"sports",img:"dumbbell.png",price:2199,old:2799,desc:"Solid rubber coat, chrome knurled grip, floor-safe.",rating:"★★★★★",reviews:192,badge:null},
+  {id:14,name:"RAFA Polarized Sunglasses",cat:"fashion",img:"sunglasses.png",price:1299,old:1799,desc:"TAC polarized lens, UV400 protection, wayfarer frame.",rating:"★★★★★",reviews:344,badge:"Popular"},
+  {id:15,name:"Smart Air Purifier Mini",cat:"home",img:"airpurifier.png",price:3499,old:4999,desc:"True HEPA H13 filter, covers 300 sq ft, ultra quiet.",rating:"★★★★☆",reviews:112,badge:"Sale"},
+  {id:16,name:"Bestor Laptop Stand",cat:"electronics",img:"laptopstand.png",price:999,old:1499,desc:"6-angle adjustable height, foldable aluminium alloy.",rating:"★★★★★",reviews:287,badge:null},
+];
+
+let cart=[], curCat='all', curSearch='';
+
+function pct(p,o){return o?Math.round((o-p)/o*100):0}
+
+function renderProducts(){
+  const g=document.getElementById('productsGrid');
+  const list=PRODUCTS.filter(p=>{
+    const mc=curCat==='all'||p.cat===curCat;
+    const ms=p.name.toLowerCase().includes(curSearch)||p.cat.toLowerCase().includes(curSearch);
+    return mc&&ms;
+  });
+  if(!list.length){g.innerHTML=`<p style="color:var(--muted);grid-column:1/-1;text-align:center;padding:80px 0;font-size:1rem">No products found.</p>`;return;}
+  g.innerHTML=list.map(p=>{
+    const save=pct(p.price,p.old);
+    const badgeClass=p.badge==='New'?'new':p.badge==='Sale'?'sale':'';
+    return `<div class="pcard">
+      <div class="card-img-wrap">
+        ${p.badge?`<div class="card-badge ${badgeClass}">${p.badge}</div>`:''}
+        <img src="${p.img}" alt="${p.name}" loading="lazy" onerror="this.style.display='none'"/>
+      </div>
+      <div class="card-body">
+        <div class="card-cat">${p.cat}</div>
+        <div class="card-name">${p.name}</div>
+        <div class="card-desc">${p.desc}</div>
+        <div class="card-rating">${p.rating} <span>(${p.reviews} reviews)</span></div>
+        <div class="card-foot">
+          <div class="price-group">
+            <span class="price-now">₹${p.price.toLocaleString('en-IN')}</span>
+            ${p.old?`<span class="price-old">₹${p.old.toLocaleString('en-IN')}</span><span class="price-save">${save}% off</span>`:''}
+          </div>
+          <button class="add-cart-btn" onclick="addCart(${p.id})" title="Add to cart">+</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function filterCat(cat,btn){
+  curCat=cat;
+  document.querySelectorAll('.cat-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderProducts();
+}
+
+function doSearch(){
+  curSearch=document.getElementById('searchInput').value.toLowerCase();
+  renderProducts();
+}
+
+function addCart(id){
+  const p=PRODUCTS.find(x=>x.id===id);
+  const ex=cart.find(x=>x.id===id);
+  if(ex)ex.qty++;else cart.push({...p,qty:1});
+  updateCount();
+  showToast(`✅ ${p.name} added!`);
+}
+
+function updateCount(){
+  document.getElementById('cart-count').textContent=cart.reduce((s,x)=>s+x.qty,0);
+}
+
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2600);
+}
+
+function openCart(){renderCart();document.getElementById('drawerOverlay').classList.add('open')}
+function closeCart(){document.getElementById('drawerOverlay').classList.remove('open')}
+function handleOverlayClick(e){if(e.target===document.getElementById('drawerOverlay'))closeCart()}
+
+function changeQty(id,delta){
+  const item=cart.find(x=>x.id===id);
+  if(!item)return;
+  item.qty+=delta;
+  if(item.qty<=0)cart=cart.filter(x=>x.id!==id);
+  updateCount();renderCart();
+}
+
+function renderCart(){
+  const b=document.getElementById('cartBody');
+  if(!cart.length){
+    b.innerHTML=`<div class="cart-empty">🛒<br><br>Your cart is empty.<br>Add some awesome products!</div>`;
+    return;
+  }
+  const total=cart.reduce((s,p)=>s+p.price*p.qty,0);
+  b.innerHTML=cart.map(p=>`
+    <div class="cart-item">
+      <img class="ci-img" src="${p.img}" alt="${p.name}" onerror="this.style.display='none'"/>
+      <div class="ci-info">
+        <div class="ci-name">${p.name}</div>
+        <div class="ci-price">₹${(p.price*p.qty).toLocaleString('en-IN')}</div>
+        <div class="ci-qty">
+          <button class="qty-btn" onclick="changeQty(${p.id},-1)">−</button>
+          <span class="qty-val">${p.qty}</span>
+          <button class="qty-btn" onclick="changeQty(${p.id},1)">+</button>
+        </div>
+      </div>
+      <button class="ci-remove" onclick="changeQty(${p.id},-999)">✕</button>
+    </div>
+  `).join('')+`
+    <div class="cart-total-row">
+      <div class="cart-total-num">Total: ₹${total.toLocaleString('en-IN')}</div>
+      <button class="checkout-btn" onclick="checkout()">Place Order →</button>
+    </div>`;
+}
+
+function checkout(){
+  cart=[];updateCount();closeCart();
+  showToast('🎉 Order placed! Thank you for shopping with ShopNest!');
+}
+
+renderProducts();
+</script>
+</body>
+</html>
